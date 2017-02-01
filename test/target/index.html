@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p id="text">Some text</p>
+
+    <p>Last Input Event: <span id="last-input-event"></span></p>
+    <input id="text-input" type="text">
+
+    <p>Last button Event: <span id="last-button-event"></span></p>
+    <input id="button" type="button" value="Button">
+
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    <script>
+        var events = {
+            mouse: ["mouseup", "mousedown", "click"],
+            keyboard: ["keypress", "keyup", "keydown"],
+            input: ["focus", "change"]
+        };
+        events.all = [].concat(events.mouse, events.keyboard, events.input);
+
+        function bindEvents(element, display, events) {
+            events.forEach(function(event) {
+                element.on(event, function() {
+                    display.html(event);
+                });
+            });
+        }
+
+        var textInput = $("#text-input");
+        var lastInputEvent = $("#last-input-event");
+
+        bindEvents(textInput,  lastInputEvent, events.all);
+
+
+        var button = $("#button");
+        var lastButtonEvent = $("#last-button-event");
+        bindEvents(button,  lastButtonEvent, events.mouse);
+    </script>
+</body>
+</html>
