@@ -1,39 +1,34 @@
-class TestServer {
+function TestServer(express, proxy) {
+    let _server = null,
+    _port = null,
+    _testingEndpoint = null,
+    _targetUrl = null;
 
-    constructor(express, proxy) {
-        this._express = express;
-        this._proxy = proxy;
-        this._server = null;
-        this._port = null;
-        this._testingEndpoint = null;
-        this._targetUrl = null;
-    }
-
-    setTargetUrl(targetUrl) {
-        this._targetUrl = targetUrl;
+    this.setTargetUrl = (targetUrl) => {
+        _targetUrl = targetUrl;
         return this;
-    }
+    };
 
-    setPort(port) {
-        this._port = port;
+    this.setPort = (port) => {
+        _port = port;
         return this;
-    }
+    };
 
-    setTestingEndpoint(testingEndpoint) {
-        this._testingEndpoint = testingEndpoint;
+    this.setTestingEndpoint = (testingEndpoint) => {
+        _testingEndpoint = testingEndpoint;
         return this;
-    }
+    };
 
-    start() {
-        let app = this._express();
-        app.use(this._testingEndpoint, this._express.static("test.html"));
-        app.use('/', this._proxy({target: this._targetUrl, changeOrigin: true}));
-        this._server = app.listen(this._port);
-    }
+    this.start = () => {
+        let app = express();
+        app.use(_testingEndpoint, express.static("test.html"));
+        app.use('/', proxy({target: _targetUrl, changeOrigin: true}));
+        _server = app.listen(_port);
+    };
 
-    shutdown() {
-        this._server.close();
-    }
+    this.shutdown = () => {
+        _server.close();
+    };
 
 }
 
