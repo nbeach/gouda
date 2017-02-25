@@ -22,7 +22,7 @@ describe("TestServer", ()=> {
     describe("start()", () => {
 
         it("start the server on the specified port", () => {
-            testServer.setPort(9001);
+            testServer.port(9001);
             testServer.start();
 
             expect(expressApp.listen.called).to.be.true;
@@ -31,7 +31,7 @@ describe("TestServer", ()=> {
 
         it("sets up the test endpoint first", () => {
             express.static.withArgs("test.html").returns("static");
-            testServer.setTestingEndpoint("/test/endpoint");
+            testServer.testingEndpoint("/test/endpoint");
             testServer.start();
 
             expect(expressApp.use.called).to.be.true;
@@ -39,7 +39,7 @@ describe("TestServer", ()=> {
         });
 
         it("set up the target proxy second", () => {
-            testServer.setTargetUrl("http://www.google.com");
+            testServer.targetUrl("http://www.google.com");
             proxy.returns("proxy");
 
             testServer.start();
@@ -71,7 +71,7 @@ describe("TestServer", ()=> {
 
         it("returns a page with the testing JS included", () => {
             testServer
-                .setTestJs("console.log('HELLO WORLD');")
+                .testScript("console.log('HELLO WORLD');")
                 .start();
 
             let response = {
@@ -79,9 +79,9 @@ describe("TestServer", ()=> {
             };
             let testEndpointMethod = expressApp.use.firstCall.args[1];
             testEndpointMethod(null, response);
+
             expect(response.send.called).to.be.true;
             expect(response.send.firstCall.args[0]).to.contain("console.log('HELLO WORLD');");
-
         });
 
     });

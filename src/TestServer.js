@@ -5,22 +5,22 @@ function TestServer(express, proxy) {
     _targetUrl = null,
     _testJs = null;
 
-    this.setTargetUrl = (targetUrl) => {
+    this.targetUrl = (targetUrl) => {
         _targetUrl = targetUrl;
         return this;
     };
 
-    this.setPort = (port) => {
+    this.port = (port) => {
         _port = port;
         return this;
     };
 
-    this.setTestingEndpoint = (testingEndpoint) => {
+    this.testingEndpoint = (testingEndpoint) => {
         _testingEndpoint = testingEndpoint;
         return this;
     };
 
-    this.setTestJs = (testJs) => {
+    this.testScript = (testJs) => {
       _testJs = testJs;
       return this;
     };
