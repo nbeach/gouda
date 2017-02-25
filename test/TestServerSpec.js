@@ -35,7 +35,7 @@ describe("TestServer", ()=> {
             testServer.start();
 
             expect(expressApp.use.called).to.be.true;
-            expect(expressApp.use.firstCall.args).to.deep.equal(["/test/endpoint", "static"]);
+            expect(expressApp.use.firstCall.args[0]).to.equal("/test/endpoint");
         });
 
         it("set up the target proxy second", () => {
@@ -62,6 +62,26 @@ describe("TestServer", ()=> {
             testServer.shutdown();
 
             expect(server.close.called).to.be.true;
+        });
+
+    });
+
+    //TODO: Improve assertions on HTML returned
+    describe("the testing endpoint", () => {
+
+        it("returns a page with the testing JS included", () => {
+            testServer
+                .setTestJs("console.log('HELLO WORLD');")
+                .start();
+
+            let response = {
+                send: sinon.stub()
+            };
+            let testEndpointMethod = expressApp.use.firstCall.args[1];
+            testEndpointMethod(null, response);
+            expect(response.send.called).to.be.true;
+            expect(response.send.firstCall.args[0]).to.contain("console.log('HELLO WORLD');");
+
         });
 
     });
