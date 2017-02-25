@@ -24,12 +24,14 @@ describe("BrowserCompatibilitySpec", function() {
         events.all = [].concat(events.mouse, events.keyboard, events.input);
 
         paramIt(events.mouse, "#value on an input", function(event) {
-            Simulate(Framer.document().find('#button')[0], event);
+            var input = Framer.document().find('#button')[0];
+            Simulate(input, event);
             expect(Framer.document().find('#last-button-event').text()).to.equal(event);
         });
 
         paramIt(events.all, "#value on an input", function(event) {
-            Simulate(Framer.document().find('#text-input')[0], event);
+            var button = Framer.document().find('#text-input')[0];
+            Simulate(button, event);
             expect(Framer.document().find('#last-input-event').text()).to.equal(event);
         });
 

@@ -19,7 +19,18 @@ var config = {
         mocha: {
             timeout: 30000
         }
-    }
+    },
+
+    middleware: ['custom'],
+    plugins: ['karma-mocha', 'karma-chai', 'karma-chrome-launcher', 'karma-firefox-launcher',
+        {'middleware:custom': ['factory', function (config) {
+            return function (request, response) {
+                // response.writeHead(200)
+                console.log("hey!");
+                return response;
+            }
+        }]}
+    ]
     // customLaunchers: {
     //     "chrome-no-security": {
     //         base: 'Chrome',
