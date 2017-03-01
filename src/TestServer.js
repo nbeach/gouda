@@ -5,7 +5,7 @@ function TestServer(express, proxy) {
     _targetUrl = null,
     _testJs = null;
 
-    this.targetUrl = (targetUrl) => {
+    this.target = (targetUrl) => {
         _targetUrl = targetUrl;
         return this;
     };
@@ -15,12 +15,12 @@ function TestServer(express, proxy) {
         return this;
     };
 
-    this.testingEndpoint = (testingEndpoint) => {
+    this.endpoint = (testingEndpoint) => {
         _testingEndpoint = testingEndpoint;
         return this;
     };
 
-    this.testScript = (testJs) => {
+    this.script = (testJs) => {
       _testJs = testJs;
       return this;
     };

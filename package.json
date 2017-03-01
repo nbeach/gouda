@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "test": "mocha --recursive",
-    "test:watch": "mocha --recursive --watch --reporter progress"
+    "test:watch": "mocha --recursive --watch --reporter nyan"
   },
   "devDependencies": {
     "chai": "^3.5.0",

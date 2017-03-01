@@ -31,7 +31,7 @@ describe("TestServer", ()=> {
 
         it("sets up the test endpoint first", () => {
             express.static.withArgs("test.html").returns("static");
-            testServer.testingEndpoint("/test/endpoint");
+            testServer.endpoint("/test/endpoint");
             testServer.start();
 
             expect(expressApp.use.called).to.be.true;
@@ -39,7 +39,7 @@ describe("TestServer", ()=> {
         });
 
         it("set up the target proxy second", () => {
-            testServer.targetUrl("http://www.google.com");
+            testServer.target("http://www.google.com");
             proxy.returns("proxy");
 
             testServer.start();
@@ -71,7 +71,7 @@ describe("TestServer", ()=> {
 
         it("returns a page with the testing JS included", () => {
             testServer
-                .testScript("console.log('HELLO WORLD');")
+                .script("console.log('HELLO WORLD');")
                 .start();
 
             let response = {
