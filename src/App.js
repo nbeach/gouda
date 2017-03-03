@@ -1,10 +1,16 @@
 const _ = require('lodash');
-
-function Testinator(scriptLoader, testServer) {
+function App(babel, scriptLoader, testServer) {
     let _workingDirectory = "";
+    const babelConfig = {
+        presets: ['es2015']
+    };
+
+    scriptLoader.transform((source) => {
+        return babel.transform(source, babelConfig).code;
+    });
 
     let _loadConfiguration = () => {
-        return require(`${_workingDirectory}/testinator.config.js`);
+        return require(`${_workingDirectory}/app.config.js`);
     };
 
     this.workingDirectory = (workingDirectory) => {
@@ -21,8 +27,8 @@ function Testinator(scriptLoader, testServer) {
             .endpoint(config.endpoint)
             .target(config.target)
             .script(scripts)
-            .run();
+            .start();
     };
 }
 
-module.exports = Testinator;
+module.exports = App;
