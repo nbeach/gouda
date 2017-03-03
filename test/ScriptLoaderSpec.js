@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const stubObject = require("./TestUtils").stubObject;
 const ScriptLoader = require("../src/ScriptLoader");
 
 
@@ -7,9 +8,7 @@ describe("ScriptLoader", () => {
     let fs, scriptLoader;
 
     beforeEach(() => {
-        fs = {
-            readFileSync: sinon.stub()
-        };
+        fs = stubObject(["readFileSync"]);
         fs.readFileSync.withArgs("foo.js").returns("console.log('foo');");
         fs.readFileSync.withArgs("bar.js").returns("console.log('bar');");
 

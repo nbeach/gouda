@@ -1,33 +1,15 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const stubObject = require("./TestUtils").stubObject;
 const App = require('../src/App');
 
 describe("App", () => {
     let scriptLoader, testServer, babel, app;
 
     beforeEach(() => {
-
-        scriptLoader = {
-            load: sinon.stub(),
-            transform: sinon.stub()
-        };
-
-        testServer = {
-            start: sinon.stub(),
-            port: sinon.stub(),
-            endpoint: sinon.stub(),
-            script: sinon.stub(),
-            target: sinon.stub()
-        };
-
-        babel = {
-            transform: sinon.stub()
-        };
-
-        testServer.port.returns(testServer);
-        testServer.endpoint.returns(testServer);
-        testServer.script.returns(testServer);
-        testServer.target.returns(testServer);
+        scriptLoader = stubObject(["load", "transform"]);
+        testServer = stubObject(["start", "port", "endpoint", "script", "target"], true);
+        babel = stubObject(["transform"]);
 
         app = new App(babel, scriptLoader, testServer);
         app.workingDirectory("../test/");

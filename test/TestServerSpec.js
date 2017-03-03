@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const stubObject = require("./TestUtils").stubObject;
 const TestServer = require("../src/TestServer");
 
 describe("TestServer", ()=> {
@@ -8,11 +9,7 @@ describe("TestServer", ()=> {
     beforeEach(() => {
         express = sinon.stub();
         express.static = sinon.stub();
-
-        expressApp = {
-            listen: sinon.stub(),
-            use: sinon.stub()
-        };
+        expressApp = stubObject(["listen", "use"]);
 
         proxy = sinon.stub();
         express.returns(expressApp);
