@@ -4,33 +4,23 @@ const stubObject = require("./TestUtils").stubObject;
 const App = require('../src/App');
 
 describe("App", () => {
-    let scriptLoader, testServer, babel, app;
+    let fs, testServer, babel, app;
 
     beforeEach(() => {
-        scriptLoader = stubObject(["load", "transform"]);
-        testServer = stubObject(["start", "port", "endpoint", "script", "target"], true);
+        fs = stubObject(["readFileSync"]);
+        testServer = stubObject(["start", "port", "endpoint", "scripts", "target"], true);
         babel = stubObject(["transform"]);
 
-        app = new App(babel, scriptLoader, testServer);
+        app = new App(fs, babel, testServer);
         app.workingDirectory("../test/");
     });
 
-    describe("on construction", () => {
-
-        it("adds an es6 to es5 transform to the script loader", () => {
-            babel.transform.returns({ code: "var a = 10;"});
-
-            let transform = scriptLoader.transform.firstCall.args[0];
-            let result = transform("const a = 10;");
-
-            expect(babel.transform.calledWith("const a = 10;", { presets: ['es2015'] }));
-            expect(result).to.equal("var a = 10;");
-
-        });
-
-    });
 
     describe("run()", () => {
+
+        beforeEach(() => {
+            babel.transform.returns({ code: ""});
+        });
 
         it("runs the test server", () => {
             app.run();
@@ -46,14 +36,35 @@ describe("App", () => {
             expect(testServer.target.calledWith("http://www.test.com")).to.be.true;
         });
 
-        it("loads the test files", () => {
-            scriptLoader.load.returns("console.log('foo');");
+        it("loads the test files and transforms from ES5 to ES6", () => {
+            fs.readFileSync.withArgs(["fooSpec.js", "barSpec.js"])
+                .returns(["console.log('foo');", "console.log('bar');"]);
+            babel.transform.returns({ code: "console.log('foobar');"});
 
             app.run();
-            expect(scriptLoader.load.calledWith(["fooSpec.js", "barSpec.js"])).to.be.true;
-            expect(testServer.script.calledWith("console.log('foo');")).to.be.true;
+
+            expect(testServer.scripts.firstCall.args[0][1]).to.equal("console.log('foobar');");
+            expect(testServer.scripts.firstCall.args[0][2]).to.equal("console.log('foobar');");
+        });
+
+        describe("loads configured plugins and", () => {
+
+            it("allows plugins to add scripts before and after the test scriptss", () => {
+                babel.transform.returns({ code: "console.log('foobar');"});
+
+                app.run();
+
+                expect(testServer.scripts.firstCall.args[0]).to.deep.equal([
+                    "console.log('before');",
+                    "console.log('foobar');",
+                    "console.log('foobar');",
+                    "console.log('after');"
+                ]);
+            });
+
         });
 
     });
+
 
 });

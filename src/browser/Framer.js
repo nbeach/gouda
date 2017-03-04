@@ -1,5 +1,6 @@
+//TODO: Everything!
 (() => {
-    function Framer() {
+    function Framer(hook) {
 
         this.setup = (done) => {
 

@@ -1,6 +1,10 @@
 module.exports = {
-    files: ["fooSpec.js", "barSpec.js"],
-    endpoint: "/test-endpoint",
     target: "http://www.test.com",
-    port: "8000"
+    endpoint: "/test-endpoint",
+    port: "8000",
+    plugins: [
+        hooks => hooks.tests.before("console.log('before');"),
+        hooks => hooks.tests.after("console.log('after');")
+    ],
+    files: ["fooSpec.js", "barSpec.js"]
 };

@@ -1,11 +1,13 @@
 module.exports = {
-  files: [
+    target: "http://www.nicholasbeach.com",
+    endpoint: "/test",
+    port: "8000",
+    plugins: [
+        require('../src/plugins/mochaPlugin'),
+        require('../src/plugins/chaiPlugin')
+    ],
+    files: [
       'scripts/foo.js',
-      'scripts/bar.js',
-      '../src/browser/Framer.js'
-
-  ],
-  endpoint: "/test",
-  target: "http://www.nicholasbeach.com",
-  port: "8000"
+      'scripts/bar.js'
+    ]
 };

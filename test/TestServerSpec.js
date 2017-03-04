@@ -66,9 +66,9 @@ describe("TestServer", ()=> {
     //TODO: Improve assertions on HTML returned
     describe("the testing endpoint", () => {
 
-        it("returns a page with the testing JS included", () => {
+        it("returns a page with the scripts included", () => {
             testServer
-                .script("console.log('HELLO WORLD');")
+                .scripts(["console.log('foo');", "console.log('bar');"])
                 .start();
 
             let response = {
@@ -78,7 +78,7 @@ describe("TestServer", ()=> {
             testEndpointMethod(null, response);
 
             expect(response.send.called).to.be.true;
-            expect(response.send.firstCall.args[0]).to.contain("console.log('HELLO WORLD');");
+            expect(response.send.firstCall.args[0]).to.contain("<script>console.log('foo');</script>\n<script>console.log('bar');</script>");
         });
 
     });

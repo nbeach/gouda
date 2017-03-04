@@ -3,7 +3,7 @@ function TestServer(express, proxy) {
     _port = null,
     _testingEndpoint = null,
     _targetUrl = null,
-    _testJs = null;
+    _script = null;
 
     this.target = (targetUrl) => {
         _targetUrl = targetUrl;
@@ -20,8 +20,8 @@ function TestServer(express, proxy) {
         return this;
     };
 
-    this.script = (testJs) => {
-      _testJs = testJs;
+    this.scripts = (scripts) => {
+      _script = scripts.map((script) => `<script>${script}</script>`).join("\n");
       return this;
     };
 
@@ -32,12 +32,13 @@ function TestServer(express, proxy) {
             <head>
                 <meta charset="UTF-8">
                 <title>Test Server</title>
+                  <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
             </head>
             <body>
             <h1>TEST SERVER</h1>
-            <script>
-                ${_testJs}
-            </script>
+            <div id="mocha"></div>
+            
+            ${_script}
             </body>
             </html>
         `);
