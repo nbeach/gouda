@@ -1,10 +1,5 @@
 module.exports = (hooks) => {
-    hooks.before.specs.includeFile(`${__dirname}/../../node_modules/mocha/mocha.js`);
-    hooks.before.specs.includeScript(`
-        mocha.setup('bdd');
-    `);
-    hooks.tests.after(`
-        mocha.checkLeaks();
-        mocha.run();
-    `);
+    hooks.beforeSpecs.include(`${__dirname}/../../../node_modules/mocha/mocha.js`);
+    hooks.beforeSpecs.include(`${__dirname}/before.js`);
+    hooks.afterSpecs.include(`${__dirname}/after.js`);
 };
