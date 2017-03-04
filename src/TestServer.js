@@ -35,7 +35,6 @@ function TestServer(express, proxy) {
                   <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
             </head>
             <body>
-            <h1>TEST SERVER</h1>
             <div id="mocha"></div>
             
             ${_script}

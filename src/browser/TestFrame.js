@@ -1,6 +1,6 @@
 //TODO: Everything!
 (() => {
-    function Framer(hook) {
+    function TestFrame(hook) {
 
         this.setup = (done) => {
 

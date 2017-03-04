@@ -1,8 +1,9 @@
-// let expect = chai.expect;
-describe("one", function() {
+let expect = chai.expect;
 
-    it("two", function() {
-        chai.expect(true).to.equal(false);
+describe("foo", function() {
+
+    it("fail", function() {
+        expect(true).to.equal(false);
     });
 
 });

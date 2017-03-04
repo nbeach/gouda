@@ -3,8 +3,8 @@ module.exports = {
     endpoint: "/test-endpoint",
     port: "8000",
     plugins: [
-        hooks => hooks.tests.before("console.log('before');"),
-        hooks => hooks.tests.after("console.log('after');")
+        hooks => hooks.beforeSpecs.include("/before/file.js"),
+        hooks => hooks.afterSpecs.include("/after/file.js")
     ],
-    files: ["fooSpec.js", "barSpec.js"]
+    specs: ["fooSpec.js", "barSpec.js"]
 };

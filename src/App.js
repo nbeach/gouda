@@ -1,36 +1,34 @@
 const _ = require('lodash');
 function App(fs, babel, testServer) {
-    const BABEL_CONFIG = {
-        presets: ['es2015']
-    };
-
     let _workingDirectory = "";
     let _scripts = {
         before: [],
         after: []
     };
 
-    const _loadConfiguration = () => require(`${_workingDirectory}/app.config.js`);
-    const _readContents = (file) => fs.readFileSync(`${_workingDirectory}/${file}`);
-    const _transpile = (script) =>  babel.transform(script, BABEL_CONFIG).code;
-
-    const _beforeScript = (script) => {
-        _scripts.before.push(script);
-        return this;
+    const BABEL_CONFIG = {
+        presets: ['es2015']
     };
 
-    const _afterScript = (script) => {
-        _scripts.after.push(script);
-        return this;
+    const _loadConfiguration = () => require(`${_workingDirectory}/app.config.js`);
+    const _transpile = (script) =>  babel.transform(script, BABEL_CONFIG).code;
+
+    const _readContents = (file) => {
+        let path = file.startsWith("/") ? file : `${_workingDirectory}/${file}`;
+        return fs.readFileSync(path);
+    };
+
+    const _hooks = {
+        beforeSpecs: {
+            include: (file) => _scripts.before.push(_readContents(file))
+        },
+        afterSpecs: {
+            include: (file) => _scripts.after.push(_readContents(file))
+        }
     };
 
     const _initPlugins = (plugins) => {
-        plugins.forEach(plugin => plugin({
-            tests: {
-                before: _beforeScript,
-                after: _afterScript
-            }
-        }));
+        plugins.forEach(plugin => plugin(_hooks));
         return this;
     };
 
@@ -41,15 +39,14 @@ function App(fs, babel, testServer) {
 
     this.run = () => {
         let config = _loadConfiguration();
+        _initPlugins(config.plugins);
 
-        let tests = _.chain(config.files)
+        let specs = _.chain(config.specs)
             .map(file => _readContents(file))
             .map(script => _transpile(script))
             .value();
 
-        _initPlugins(config.plugins);
-
-        let scripts = [].concat(_scripts.before, tests, _scripts.after);
+        let scripts = [].concat(_scripts.before, specs, _scripts.after);
 
         testServer
             .port(config.port)

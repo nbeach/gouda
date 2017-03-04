@@ -1,8 +1,6 @@
-let fs = require('fs');
-
 module.exports = (hooks) => {
-    hooks.tests.before(fs.readFileSync(`${__dirname}/../../node_modules/mocha/mocha.js`));
-    hooks.tests.before(`
+    hooks.before.specs.includeFile(`${__dirname}/../../node_modules/mocha/mocha.js`);
+    hooks.before.specs.includeScript(`
         mocha.setup('bdd');
     `);
     hooks.tests.after(`

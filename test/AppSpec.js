@@ -37,20 +37,21 @@ describe("App", () => {
         });
 
         it("loads the test files and transforms from ES5 to ES6", () => {
-            fs.readFileSync.withArgs(["fooSpec.js", "barSpec.js"])
-                .returns(["console.log('foo');", "console.log('bar');"]);
-            babel.transform.returns({ code: "console.log('foobar');"});
+            babel.transform.returns({ code: "console.log('babel');"});
 
             app.run();
 
-            expect(testServer.scripts.firstCall.args[0][1]).to.equal("console.log('foobar');");
-            expect(testServer.scripts.firstCall.args[0][2]).to.equal("console.log('foobar');");
+            let scripts = testServer.scripts.firstCall.args[0];
+            expect(scripts[1]).to.equal("console.log('babel');");
+            expect(scripts[2]).to.equal("console.log('babel');");
         });
 
         describe("loads configured plugins and", () => {
 
-            it("allows plugins to add scripts before and after the test scriptss", () => {
+            it("allows plugins to add scripts before and after the test scripts", () => {
                 babel.transform.returns({ code: "console.log('foobar');"});
+                fs.readFileSync.withArgs("/before/file.js").returns("console.log('before');");
+                fs.readFileSync.withArgs("/after/file.js").returns("console.log('after');");
 
                 app.run();
 

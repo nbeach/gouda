@@ -3,11 +3,11 @@ module.exports = {
     endpoint: "/test",
     port: "8000",
     plugins: [
-        require('../src/plugins/mochaPlugin'),
-        require('../src/plugins/chaiPlugin')
+        require('../src/plugins/mocha/mochaPlugin'),
+        require('../src/plugins/chai/chaiPlugin')
     ],
-    files: [
-      'scripts/foo.js',
-      'scripts/bar.js'
+    specs: [
+      'scripts/bar.js',
+      'scripts/foo.js'
     ]
 };
