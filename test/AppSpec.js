@@ -36,6 +36,17 @@ describe("App", () => {
             expect(testServer.target.calledWith("http://www.test.com")).to.be.true;
         });
 
+
+        it("loads the event simulator and includes it in the scrips", () => {
+            fs.readFileSync = (path) => {
+                return path.endsWith("/../node_modules/simulant/dist/simulant.umd.js") ? "console.log('eventSimulator');" : null;
+            };
+
+            app.run();
+
+            expect(testServer.scripts.firstCall.args[0][0]).to.equal("console.log('eventSimulator');");
+        });
+
         it("loads the test frame and includes it in the scrips", () => {
             fs.readFileSync = (path) => {
                 return path.endsWith("/browser/testFrame.js") ? "console.log('testFrame');" : null;
@@ -43,7 +54,7 @@ describe("App", () => {
 
             app.run();
 
-            expect(testServer.scripts.firstCall.args[0][0]).to.equal("console.log('testFrame');");
+            expect(testServer.scripts.firstCall.args[0][1]).to.equal("console.log('testFrame');");
         });
 
         it("loads the test files and transforms from ES5 to ES6", () => {
@@ -52,8 +63,8 @@ describe("App", () => {
             app.run();
 
             let scripts = testServer.scripts.firstCall.args[0];
-            expect(scripts[2]).to.equal("console.log('babel');");
             expect(scripts[3]).to.equal("console.log('babel');");
+            expect(scripts[4]).to.equal("console.log('babel');");
         });
 
         describe("loads configured plugins and", () => {
@@ -65,8 +76,8 @@ describe("App", () => {
 
                 app.run();
 
-                expect(testServer.scripts.firstCall.args[0][1]).to.equal("console.log('before');");
-                expect(testServer.scripts.firstCall.args[0][4]).to.equal("console.log('after');");
+                expect(testServer.scripts.firstCall.args[0][2]).to.equal("console.log('before');");
+                expect(testServer.scripts.firstCall.args[0][5]).to.equal("console.log('after');");
             });
 
         });

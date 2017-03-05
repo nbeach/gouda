@@ -8,6 +8,6 @@ module.exports = {
         require('../src/plugins/chaiPlugin')
     ],
     specs: [
-      'tests/domReadWriteSpec.js'
+      'tests/BrowserCompatibilitySpec.js'
     ]
 };

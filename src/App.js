@@ -46,8 +46,9 @@ function App(fs, babel, testServer) {
             .map(script => _transpile(script))
             .value();
 
+        let simulant = _readContents(`${__dirname}/../node_modules/simulant/dist/simulant.umd.js`);
         let frameScript = _readContents(`${__dirname}/browser/testFrame.js`);
-        let scripts = [].concat(frameScript, _scripts.before, specs, _scripts.after);
+        let scripts = [].concat(simulant, frameScript, _scripts.before, specs, _scripts.after);
 
         testServer
             .port(config.port)
