@@ -36,14 +36,22 @@ describe("App", () => {
             expect(testServer.target.calledWith("http://www.test.com")).to.be.true;
         });
 
+        it("loads the test frame and includes it in the scrips", () => {
+            fs.readFileSync.withArgs("../test//browser/testFrame.js").returns("console.log('testFrame');");
+
+            app.run();
+
+            expect(testServer.scripts.firstCall.args[0][0]).to.equal("console.log('testFrame');");
+        });
+
         it("loads the test files and transforms from ES5 to ES6", () => {
             babel.transform.returns({ code: "console.log('babel');"});
 
             app.run();
 
             let scripts = testServer.scripts.firstCall.args[0];
-            expect(scripts[1]).to.equal("console.log('babel');");
             expect(scripts[2]).to.equal("console.log('babel');");
+            expect(scripts[3]).to.equal("console.log('babel');");
         });
 
         describe("loads configured plugins and", () => {
@@ -55,12 +63,8 @@ describe("App", () => {
 
                 app.run();
 
-                expect(testServer.scripts.firstCall.args[0]).to.deep.equal([
-                    "console.log('before');",
-                    "console.log('foobar');",
-                    "console.log('foobar');",
-                    "console.log('after');"
-                ]);
+                expect(testServer.scripts.firstCall.args[0][1]).to.equal("console.log('before');");
+                expect(testServer.scripts.firstCall.args[0][4]).to.equal("console.log('after');");
             });
 
         });

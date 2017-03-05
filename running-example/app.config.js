@@ -5,7 +5,7 @@ module.exports = {
     plugins: [
         require('../src/plugins/jqueryPlugin'),
         require('../src/plugins/mocha/mochaPlugin'),
-        require('../src/chaiPlugin')
+        require('../src/plugins/chaiPlugin')
     ],
     specs: [
       'scripts/bar.js',

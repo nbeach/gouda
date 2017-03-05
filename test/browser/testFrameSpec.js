@@ -15,7 +15,6 @@ describe("testFrame", () => {
             }
         };
 
-
         document = {
             createElement: sinon.stub(),
             body: {
@@ -56,11 +55,11 @@ describe("testFrame", () => {
         });
     });
 
-    it("window()", () => {
+    it("window() returns the frame window", () => {
         expect(testFrame.window()).to.equal(iframe.contentWindow);
     });
 
-    it("document() returns the document", () => {
+    it("document() returns the frame document", () => {
         expect(testFrame.document()).to.equal(iframe.contentWindow.document);
     });
 });

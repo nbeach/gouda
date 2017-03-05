@@ -46,7 +46,8 @@ function App(fs, babel, testServer) {
             .map(script => _transpile(script))
             .value();
 
-        let scripts = [].concat(_scripts.before, specs, _scripts.after);
+        let frameScript = _readContents(`${__dirname}/browser/testFrame.js`);
+        let scripts = [].concat(frameScript, _scripts.before, specs, _scripts.after);
 
         testServer
             .port(config.port)
