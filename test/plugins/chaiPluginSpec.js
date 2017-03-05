@@ -18,7 +18,7 @@ describe("chaiPlugin", () => {
 
         let includePath = hooks.beforeSpecs.include.firstCall.args[0];
         expect(includePath).to.startsWith("/");
-        expect(includePath).to.endsWith("/../../../node_modules/chai/chai.js");
+        expect(includePath).to.endsWith("/../../node_modules/chai/chai.js");
     });
 
 });

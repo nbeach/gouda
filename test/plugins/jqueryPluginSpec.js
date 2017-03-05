@@ -18,7 +18,7 @@ describe("jqueryPlugin", () => {
 
         let includePath = hooks.beforeSpecs.include.firstCall.args[0];
         expect(includePath).to.startsWith("/");
-        expect(includePath).to.endsWith("/../../../node_modules/jquery/dist/jquery.js");
+        expect(includePath).to.endsWith("/../../node_modules/jquery/dist/jquery.js");
     });
 
 });

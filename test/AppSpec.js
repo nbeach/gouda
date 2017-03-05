@@ -37,7 +37,9 @@ describe("App", () => {
         });
 
         it("loads the test frame and includes it in the scrips", () => {
-            fs.readFileSync.withArgs("../test//browser/testFrame.js").returns("console.log('testFrame');");
+            fs.readFileSync = (path) => {
+                return path.endsWith("/browser/testFrame.js") ? "console.log('testFrame');" : null;
+            };
 
             app.run();
 

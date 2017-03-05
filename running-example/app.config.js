@@ -1,5 +1,5 @@
 module.exports = {
-    target: "http://www.nicholasbeach.com",
+    target: "http://localhost:3000",
     endpoint: "/test",
     port: "8000",
     plugins: [
@@ -8,7 +8,6 @@ module.exports = {
         require('../src/plugins/chaiPlugin')
     ],
     specs: [
-      'scripts/bar.js',
-      'scripts/foo.js'
+      'tests/domReadWriteSpec.js'
     ]
 };
