@@ -8,7 +8,6 @@ describe("The test framework", function() {
     describe("can access the DOM and", () => {
 
         it("read values", () => {
-            console.log($document.find("#text"));
             expect($document.find("#text").text()).to.equal("Some text");
         });
 
