@@ -1,7 +1,7 @@
-//TODO: Everything!
-(() => {
-    function TestFrame(hook) {
+((window) => {
 
+    window.testFrame = (new function() {
+        
         this.setup = (done) => {
 
         };
@@ -18,5 +18,7 @@
 
         };
 
-    }
-})();
+
+    })();
+
+})(window || global);
