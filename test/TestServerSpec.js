@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const stubObject = require("./TestUtils").stubObject;
+const stubObject = require("./testUtils").stubObject;
 const TestServer = require("../src/TestServer");
 
 describe("TestServer", ()=> {

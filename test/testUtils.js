@@ -1,4 +1,5 @@
 const sinon = require('sinon');
+const decache = require('decache');
 
 module.exports = {
     stubObject: function(methods, returnThis) {
@@ -11,5 +12,10 @@ module.exports = {
         });
 
         return obj;
+    },
+
+    reload: function(path) {
+        decache(path);
+        return require(path);
     }
 };

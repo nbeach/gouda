@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const stubObject = require("../../TestUtils").stubObject;
+const testUtils = require("../../testUtils");
 
 describe("mocha after actions", () => {
-    before(() => {
-        global.mocha = stubObject(["checkLeaks", "run"]);
-        require("../../../src/plugins/mocha/after")
+    beforeEach(() => {
+        global.mocha = testUtils.stubObject(["checkLeaks", "run"]);
+        testUtils.reload(__dirname + "/../../../src/plugins/mocha/after");
     });
 
     it("checks for leaks", () => {

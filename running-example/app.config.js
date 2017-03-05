@@ -3,8 +3,9 @@ module.exports = {
     endpoint: "/test",
     port: "8000",
     plugins: [
+        require('../src/plugins/jqueryPlugin'),
         require('../src/plugins/mocha/mochaPlugin'),
-        require('../src/plugins/chai/chaiPlugin')
+        require('../src/chaiPlugin')
     ],
     specs: [
       'scripts/bar.js',
