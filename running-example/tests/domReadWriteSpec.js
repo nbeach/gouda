@@ -1,8 +1,6 @@
 let expect = chai.expect;
 
 describe("The test framework", function() {
-    beforeEach(testFrame.setup);
-    afterEach(testFrame.teardown);
 
     let $document;
     beforeEach(() => $document = $(testFrame.document()));
