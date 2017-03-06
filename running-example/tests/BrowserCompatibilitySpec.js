@@ -1,11 +1,10 @@
 const expect = chai.expect;
 
-const paramIt = (list, name, func) => {
-    list.forEach((value) => {
-        it(name.replace("#value", value), func.bind(window, value));
+it.parameterized = (name, test, table) => {
+    table.forEach(data => {
+        it(name.replace("#case", data.case), () => { test(data) });
     });
 };
-
 
 describe("The test framework", function () {
 
@@ -34,17 +33,23 @@ describe("The test framework", function () {
         };
         events.all = [].concat(events.mouse, events.keyboard, events.input);
 
-        paramIt(events.mouse, "#value on an input", (event) => {
-            let input = $document.find('#button')[0];
-            simulant.fire(input, event, {});
-            expect($document.find('#last-button-event').text()).to.equal(event);
-        });
+        it.parameterized("#case on an input",
+            (test) => {
+                let input = $document.find('#button')[0];
+                simulant.fire(input, test.event, {});
+                expect($document.find('#last-button-event').text()).to.equal(test.event);
+            },
+            events.mouse.map((event) => { return{ case: event, event: event } })
+        );
 
-        paramIt(events.all, "#value on an input", (event) => {
-            let button = $document.find('#text-input')[0];
-            simulant.fire(button, event, {});
-            expect($document.find('#last-input-event').text()).to.equal(event);
-        });
+        it.parameterized("#case on an input",
+            (test) => {
+                let button = $document.find('#text-input')[0];
+                simulant.fire(button, test.event, {});
+                expect($document.find('#last-input-event').text()).to.equal(test.event);
+            },
+            events.all.map((event) => { return{ case: event, event: event } })
+        );
 
     });
 
