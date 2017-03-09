@@ -6,7 +6,6 @@
         this.setup = (done) => {
             _iframe = window.document.createElement('iframe');
             _iframe.src = "/";
-            _iframe.style = "height:500px; width:100"; //TODO: How should sizing be handled?
             _iframe.addEventListener("load", () => {
                 done();
             });

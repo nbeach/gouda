@@ -1,12 +1,12 @@
-let fs = require('fs');
-let express = require('express');
-let proxy = require('http-proxy-middleware');
-let babel = require('babel-core');
+const fs = require('fs'),
+    express = require('express'),
+    proxy = require('http-proxy-middleware'),
+    bodyParser = require('body-parser'),
+    babel = require('babel-core'),
+    TestServer = require("./TestServer"),
+    App = require("./App");
 
-let TestServer = require("./TestServer");
-let App = require("./App");
-
-let testServer = new TestServer(express, proxy);
-let app = new App(fs, babel, testServer);
+const testServer = new TestServer(express, proxy, bodyParser);
+const app = new App(fs, babel, testServer);
 
 app.workingDirectory(process.cwd()).run();

@@ -26,8 +26,15 @@ describe("mochaPlugin", () => {
         expect(mochaPath).to.endsWith("/../../../node_modules/mocha/mocha.js");
     });
 
+    it("includes Axios before the specs", () => {
+        let mochaPath = hooks.beforeSpecs.include.secondCall.args[0];
+        expect(mochaPath).to.startsWith("/");
+        expect(mochaPath).to.endsWith("/../../../node_modules/axios/dist/axios.min.js");
+    });
+
+
     it("includes Mocha setup code before the specs", () => {
-        let beforePath = hooks.beforeSpecs.include.secondCall.args[0];
+        let beforePath = hooks.beforeSpecs.include.thirdCall.args[0];
         expect(beforePath).to.startsWith("/");
         expect(beforePath).to.endsWith("/before.js");
     });

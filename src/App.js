@@ -1,5 +1,5 @@
 const _ = require('lodash');
-function App(fs, babel, testServer) {
+module.exports = function(fs, babel, testServer) {
     let _workingDirectory = "";
     let _scripts = {
         before: [],
@@ -57,6 +57,4 @@ function App(fs, babel, testServer) {
             .scripts(scripts)
             .start();
     };
-}
-
-module.exports = App;
+};

@@ -1,2 +1,4 @@
-mocha.checkLeaks();
-mocha.run();
+(function () {
+    mocha.checkLeaks();
+    mocha.run();
+})();
