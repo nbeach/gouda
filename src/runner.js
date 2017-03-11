@@ -38,7 +38,4 @@ module.exports = function(process) {
             .start();
     };
 
-    // _server.close();
-    // process.exit(req.body.failures > 0 ? 1 : 0);
-
 };
