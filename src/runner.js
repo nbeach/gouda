@@ -1,12 +1,20 @@
 const _ = require('lodash');
 
-module.exports = function() {
+module.exports = function(process) {
     let _reporters = [];
     let _launchers = [];
     let _server = null;
+    let _failures = 0;
 
     const _onResult = (result) => {
         _reporters.forEach(reporter => reporter(result));
+
+        if(result.state === 'failed') {
+            _failures++;
+        } else if(result.state === "finished") {
+            _server.shutdown();
+            process.exit(_failures > 0 ? 1 : 0);
+        }
     };
 
     this.server = (server) => {
@@ -29,5 +37,8 @@ module.exports = function() {
             .onResult(_onResult)
             .start();
     };
+
+    // _server.close();
+    // process.exit(req.body.failures > 0 ? 1 : 0);
 
 };

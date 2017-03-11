@@ -8,7 +8,7 @@ const fs = require('fs'),
     Runner = require("./runner");
 
 const testServer = new Server(express, proxy, bodyParser);
-const runner = new Runner();
+const runner = new Runner(process);
 const bootstrap = new Bootstrap(fs, babel, runner, testServer, process.cwd());
 
 bootstrap.run();
