@@ -6,6 +6,8 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
         after: []
     };
 
+    let _reporters = [];
+
     const _loadConfiguration = () => require(`${workingDirectory}/app.config.js`);
     const _transpile = (script) =>  babel.transform(script, { presets: ['es2015'] }).code;
 
@@ -20,6 +22,9 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
         },
         afterSpecs: {
             include: (file) => _scripts.after.push(_readContents(file))
+        },
+        reporter: (reporter) => {
+           _reporters.push(reporter);
         }
     };
 
@@ -41,10 +46,15 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
         let frameScript = _readContents(`${__dirname}/browser/test-frame.js`);
         let scripts = [].concat(simulant, frameScript, _scripts.before, specs, _scripts.after);
 
+        server
+            .port(config.port)
+            .endpoint(config.endpoint)
+            .target(config.target)
+            .scripts(scripts);
+
         runner
-            .config(config)
+        //     // .reporters([require('./reporter/simple-reporter')])
             .server(server)
-            .tests(scripts)
             .run();
     };
 };
