@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const stubObject = require("./testUtils").stubObject;
-const Runner = require('../src/Runner');
+const stubObject = require("./test-utils").stubObject;
+const Runner = require('../src/runner');
 
 describe("Runner", () => {
     let runner, testServer, config;

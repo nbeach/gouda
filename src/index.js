@@ -3,9 +3,9 @@ const fs = require('fs'),
     proxy = require('http-proxy-middleware'),
     bodyParser = require('body-parser'),
     babel = require('babel-core'),
-    TestServer = require("./TestServer"),
-    Bootstrap = require("./Bootstrap");
-    Runner = require("./Runner");
+    TestServer = require("./test-server"),
+    Bootstrap = require("./bootstrap");
+    Runner = require("./runner");
 
 const testServer = new TestServer(express, proxy, bodyParser);
 const runner = new Runner();

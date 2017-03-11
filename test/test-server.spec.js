@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const stubObject = require("./testUtils").stubObject;
-const TestServer = require("../src/TestServer");
+const stubObject = require("./test-utils").stubObject;
+const TestServer = require("../src/test-server");
 
 describe("TestServer", ()=> {
     let testServer, express, expressApp, proxy, bodyParser;

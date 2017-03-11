@@ -3,11 +3,11 @@ module.exports = {
     endpoint: "/test",
     port: "8000",
     plugins: [
-        require('../src/plugins/jqueryPlugin'),
-        require('../src/plugins/mocha/mochaPlugin'),
-        require('../src/plugins/chaiPlugin')
+        require('../src/plugins/jquery-plugin'),
+        require('../src/plugins/mocha/mocha-plugin'),
+        require('../src/plugins/chai-plugin')
     ],
     specs: [
-      'tests/BrowserCompatibilitySpec.js'
+      'tests/browser-compatibility.spec.js'
     ]
 };

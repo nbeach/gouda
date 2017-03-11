@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
-const testUtils = require("../testUtils");
+const testUtils = require("../test-utils");
 
 describe("testFrame", () => {
     let testFrame, document, iframe;
@@ -23,7 +23,7 @@ describe("testFrame", () => {
         };
 
         global.document = document;
-        testUtils.reload(__dirname + '/../../src/browser/testFrame');
+        testUtils.reload(__dirname + '/../../src/browser/test-frame');
         testFrame = global.testFrame;
     });
 

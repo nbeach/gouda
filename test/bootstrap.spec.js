@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const stubObject = require("./testUtils").stubObject;
-const Bootstrap = require('../src/Bootstrap');
+const stubObject = require("./test-utils").stubObject;
+const Bootstrap = require('../src/bootstrap');
 
 describe("Bootstrap", () => {
     let fs, testServer, runner, babel, app;
@@ -54,7 +54,7 @@ describe("Bootstrap", () => {
 
         it("loads the test frame and includes it in the scrips", () => {
             fs.readFileSync = (path) => {
-                return path.endsWith("/browser/testFrame.js") ? "console.log('testFrame');" : null;
+                return path.endsWith("/browser/test-frame.js") ? "console.log('testFrame');" : null;
             };
 
             app.run();

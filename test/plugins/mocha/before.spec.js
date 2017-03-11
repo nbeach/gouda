@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const testUtils = require("../../testUtils");
+const testUtils = require("../../test-utils");
 
 describe("mocha before actions", () => {
 

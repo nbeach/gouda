@@ -47,7 +47,7 @@ module.exports = function(fs, babel, runner, testServer) {
             .value();
 
         let simulant = _readContents(`${__dirname}/../node_modules/simulant/dist/simulant.umd.js`);
-        let frameScript = _readContents(`${__dirname}/browser/testFrame.js`);
+        let frameScript = _readContents(`${__dirname}/browser/test-frame.js`);
         let scripts = [].concat(simulant, frameScript, _scripts.before, specs, _scripts.after);
 
         runner

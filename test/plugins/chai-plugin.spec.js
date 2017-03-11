@@ -3,11 +3,11 @@ chai.use(require('chai-string'));
 const expect = chai.expect;
 const sinon = require('sinon');
 
-const chaiPlugin = require("../../src/plugins/jqueryPlugin");
+const chaiPlugin = require("../../src/plugins/chai-plugin");
 
-describe("jqueryPlugin", () => {
+describe("chaiPlugin", () => {
 
-    it("includes jQuery before the specs", () => {
+    it("includes Chai before the specs", () => {
         let hooks = {
             beforeSpecs: {
                 include: sinon.stub()
@@ -18,7 +18,7 @@ describe("jqueryPlugin", () => {
 
         let includePath = hooks.beforeSpecs.include.firstCall.args[0];
         expect(includePath).to.startsWith("/");
-        expect(includePath).to.endsWith("/../../node_modules/jquery/dist/jquery.js");
+        expect(includePath).to.endsWith("/../../node_modules/chai/chai.js");
     });
 
 });
