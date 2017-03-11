@@ -1,4 +1,4 @@
-module.exports = new (function(event) {
+module.exports = function(event) {
     if(event.state !== 'finished') {
         console.log("%s - %s", event.state, event.name);
     } else {
@@ -7,4 +7,4 @@ module.exports = new (function(event) {
         // process.exit(req.body.failures > 0 ? 1 : 0);
     }
 
-})();
+};

@@ -5,7 +5,7 @@ const testUtils = require("../../test-utils");
 describe("mocha after actions", () => {
     beforeEach(() => {
         global.mocha = testUtils.stubObject(["checkLeaks", "run"]);
-        testUtils.reload(__dirname + "/../../../src/plugins/mocha/after");
+        testUtils.reload(__dirname + "/../../../src/plugin/mocha/after");
     });
 
     it("checks for leaks", () => {

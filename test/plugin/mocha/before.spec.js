@@ -12,7 +12,7 @@ describe("mocha before actions", () => {
             setup: "setupMethod",
             teardown: "teardownMethod"
         };
-        testUtils.reload(__dirname + "/../../../src/plugins/mocha/before");
+        testUtils.reload(__dirname + "/../../../src/plugin/mocha/before");
     });
 
     it("sets up mocha", () => {
