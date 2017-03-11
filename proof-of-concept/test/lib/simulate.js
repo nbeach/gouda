@@ -844,7 +844,7 @@ var UA = $.browser;
                   /*
                       * Touch APIs are broken in androids older than 4.0. We will use
                       * simulated touch apis for these versions.
-                      * App developer still can listen for touch events. This events
+                      * Bootstrap developer still can listen for touch events. This events
                       * will be dispatched with touch event types.
                       *
                       * (Note) Used target for the relatedTarget. Need to verify if

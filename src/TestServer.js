@@ -3,7 +3,8 @@ module.exports = function(express, proxy, bodyParser) {
     _port = null,
     _testingEndpoint = null,
     _targetUrl = null,
-    _script = null;
+    _script = null,
+    _onResult = null;
 
     this.target = (targetUrl) => {
         _targetUrl = targetUrl;
@@ -17,6 +18,11 @@ module.exports = function(express, proxy, bodyParser) {
 
     this.endpoint = (testingEndpoint) => {
         _testingEndpoint = testingEndpoint;
+        return this;
+    };
+
+    this.onResult = (callback) => {
+        _onResult = callback;
         return this;
     };
 
@@ -49,22 +55,16 @@ module.exports = function(express, proxy, bodyParser) {
         `);
     };
 
-    const _report = (req, res) => {
-        res.send('');
-        if(req.body.state !== 'finished') {
-            console.log("%s - %s", req.body.state, req.body.name);
-        } else {
-            console.log("Finished - Passed: %s, Failed: %s", req.body.passes, req.body.failures);
-            _server.close();
-            process.exit(req.body.failures > 0 ? 1 : 0);
-        }
+    const _result = (req, res) => {
+        _onResult(req.body);
+        res.send('OK');
     };
 
     this.start = () => {
         let app = express();
         app.use(bodyParser.json());
 
-        app.use(`${_testingEndpoint}/result`, _report);
+        app.use(`${_testingEndpoint}/result`, _result);
         app.use(_testingEndpoint, _respond);
         app.use('/', proxy({target: _targetUrl, changeOrigin: true}));
         _server = app.listen(_port);

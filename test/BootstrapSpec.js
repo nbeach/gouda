@@ -1,17 +1,18 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const stubObject = require("./testUtils").stubObject;
-const App = require('../src/Orchestrator');
+const Bootstrap = require('../src/Bootstrap');
 
-describe("Orchestrator", () => {
-    let fs, testServer, babel, app;
+describe("Bootstrap", () => {
+    let fs, testServer, runner, babel, app;
 
     beforeEach(() => {
         fs = stubObject(["readFileSync"]);
+        runner = stubObject(["run", "config", "tests", "launchers", "server"], true);
         testServer = stubObject(["start", "port", "endpoint", "scripts", "target"], true);
         babel = stubObject(["transform"]);
 
-        app = new App(fs, babel, testServer);
+        app = new Bootstrap(fs, babel, runner, testServer);
         app.workingDirectory("../test/");
     });
 
@@ -21,20 +22,25 @@ describe("Orchestrator", () => {
             babel.transform.returns({ code: ""});
         });
 
-        it("runs the test server", () => {
+        it("runs the test runner", () => {
             app.run();
-            expect(testServer.start.called).to.be.true;
+            expect(runner.run.called).to.be.true;
         });
 
-        it("loads the configuration", () => {
+        it("passes the test server to the runner", () => {
             app.run();
 
-            expect(testServer.start.called).to.be.true;
-            expect(testServer.port.calledWith("8000")).to.be.true;
-            expect(testServer.endpoint.calledWith("/test-endpoint")).to.be.true;
-            expect(testServer.target.calledWith("http://www.test.com")).to.be.true;
+            let config = runner.config.firstCall.args[0];
+            expect(config.target).to.equal("http://www.test.com");
+            expect(config.endpoint).to.equal("/test-endpoint");
+            expect(config.port).to.equal("8000");
         });
 
+        it("passes the config to the runner", () => {
+            app.run();
+
+            expect(runner.server.firstCall.args[0]).to.deep.equal(testServer);
+        });
 
         it("loads the event simulator and includes it in the scrips", () => {
             fs.readFileSync = (path) => {
@@ -43,7 +49,7 @@ describe("Orchestrator", () => {
 
             app.run();
 
-            expect(testServer.scripts.firstCall.args[0][0]).to.equal("console.log('eventSimulator');");
+            expect(runner.tests.firstCall.args[0][0]).to.equal("console.log('eventSimulator');");
         });
 
         it("loads the test frame and includes it in the scrips", () => {
@@ -53,7 +59,7 @@ describe("Orchestrator", () => {
 
             app.run();
 
-            expect(testServer.scripts.firstCall.args[0][1]).to.equal("console.log('testFrame');");
+            expect(runner.tests.firstCall.args[0][1]).to.equal("console.log('testFrame');");
         });
 
         it("loads the test files and transforms from ES5 to ES6", () => {
@@ -61,7 +67,7 @@ describe("Orchestrator", () => {
 
             app.run();
 
-            let scripts = testServer.scripts.firstCall.args[0];
+            let scripts = runner.tests.firstCall.args[0];
             expect(scripts[3]).to.equal("console.log('babel');");
             expect(scripts[4]).to.equal("console.log('babel');");
         });
@@ -75,8 +81,8 @@ describe("Orchestrator", () => {
 
                 app.run();
 
-                expect(testServer.scripts.firstCall.args[0][2]).to.equal("console.log('before');");
-                expect(testServer.scripts.firstCall.args[0][5]).to.equal("console.log('after');");
+                expect(runner.tests.firstCall.args[0][2]).to.equal("console.log('before');");
+                expect(runner.tests.firstCall.args[0][5]).to.equal("console.log('after');");
             });
 
         });

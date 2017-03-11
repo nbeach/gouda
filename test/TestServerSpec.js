@@ -102,25 +102,37 @@ describe("TestServer", ()=> {
 
     });
     describe("the result endpoint", () => {
+        let request, response;
 
-        //TODO: Make assertions
-        it("does things", () => {
-            let request = {
+        beforeEach(() => {
+            request = {
                 body: {
-                    state: "passed",
-                    name: "test name"
+                    prop: "value"
                 }
             };
 
-            let response = {
+            response = {
                 send: sinon.stub()
             };
+        });
 
-            testServer.start();
+        it("calls the result callback", () => {
+            let callback = sinon.stub();
 
-            let resultEndpointMethod = expressApp.use.thirdCall.args[1];
+            testServer.onResult(callback).start();
+            let resultEndpointMethod = expressApp.use.secondCall.args[1];
             resultEndpointMethod(request, response);
+
+            expect(callback.firstCall.args[0]).to.deep.equal(request.body);
          });
+
+        it("sends an okay result", () => {
+            testServer.onResult(() => {}).start();
+            let resultEndpointMethod = expressApp.use.secondCall.args[1];
+            resultEndpointMethod(request, response);
+
+            expect(response.send.firstCall.args[0]).to.equal('OK');
+        });
 
     });
 

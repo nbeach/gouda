@@ -5,8 +5,10 @@ const fs = require('fs'),
     babel = require('babel-core'),
     TestServer = require("./TestServer"),
     Bootstrap = require("./Bootstrap");
+    Runner = require("./Runner");
 
 const testServer = new TestServer(express, proxy, bodyParser);
-const bootstrap = new Bootstrap(fs, babel, testServer);
+const runner = new Runner();
+const bootstrap = new Bootstrap(fs, babel, runner, testServer);
 
 bootstrap.workingDirectory(process.cwd()).run();

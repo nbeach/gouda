@@ -1,5 +1,5 @@
 const _ = require('lodash');
-module.exports = function(fs, babel, testServer) {
+module.exports = function(fs, babel, runner, testServer) {
     let _workingDirectory = "";
     let _scripts = {
         before: [],
@@ -50,11 +50,10 @@ module.exports = function(fs, babel, testServer) {
         let frameScript = _readContents(`${__dirname}/browser/testFrame.js`);
         let scripts = [].concat(simulant, frameScript, _scripts.before, specs, _scripts.after);
 
-        testServer
-            .port(config.port)
-            .endpoint(config.endpoint)
-            .target(config.target)
-            .scripts(scripts)
-            .start();
+        runner
+            .config(config)
+            .server(testServer)
+            .tests(scripts)
+            .run();
     };
 };
