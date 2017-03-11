@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const _ = require('lodash');
 const stubObject = require("./test-utils").stubObject;
 const Bootstrap = require('../src/bootstrap');
 
@@ -9,11 +10,10 @@ describe("Bootstrap", () => {
     beforeEach(() => {
         fs = stubObject(["readFileSync"]);
         server = stubObject(["start", "port", "endpoint", "scripts", "target"], true);
-        runner = stubObject(["server", "run"], true);
+        runner = stubObject(["server", "reporters", "run"], true);
         babel = stubObject(["transform"]);
 
         bootstrap = new Bootstrap(fs, babel, runner, server, "../test/");
-
     });
 
     describe("run()", () => {
@@ -40,6 +40,13 @@ describe("Bootstrap", () => {
             expect(runner.run.called).to.be.true;
         });
 
+        it("sets the reporters on the runner", () => {
+            bootstrap.run();
+
+            let reporters = runner.reporters.firstCall.args[0];
+            expect(reporters.length).to.equal(1);
+            expect(_.isFunction(reporters[0])).to.be.true;
+        });
 
         it("loads the event simulator and includes it in the scrips", () => {
             fs.readFileSync = (path) => {

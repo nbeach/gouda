@@ -33,10 +33,7 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
         return this;
     };
 
-    this.run = () => {
-        let config = _loadConfiguration();
-        _initPlugins(config.plugins);
-
+    const _loadScripts = (config) => {
         let specs = _.chain(config.specs)
             .map(file => _readContents(file))
             .map(script => _transpile(script))
@@ -44,7 +41,13 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
 
         let simulant = _readContents(`${__dirname}/../node_modules/simulant/dist/simulant.umd.js`);
         let frameScript = _readContents(`${__dirname}/browser/test-frame.js`);
-        let scripts = [].concat(simulant, frameScript, _scripts.before, specs, _scripts.after);
+        return [].concat(simulant, frameScript, _scripts.before, specs, _scripts.after);
+    };
+
+    this.run = () => {
+        let config = _loadConfiguration();
+        _initPlugins(config.plugins);
+        let scripts = _loadScripts(config);
 
         server
             .port(config.port)
@@ -53,7 +56,7 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
             .scripts(scripts);
 
         runner
-        //     // .reporters([require('./reporter/simple-reporter')])
+            .reporters([require('./reporter/simple-reporter')])
             .server(server)
             .run();
     };
