@@ -3,7 +3,7 @@ chai.use(require('chai-string'));
 const expect = chai.expect;
 const sinon = require('sinon');
 
-const chaiPlugin = require("../../src/plugins/jquery-plugin");
+const chaiPlugin = require("../../src/plugin/jquery-plugin");
 
 describe("jqueryPlugin", () => {
 

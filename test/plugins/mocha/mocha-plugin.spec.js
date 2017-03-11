@@ -3,7 +3,7 @@ chai.use(require('chai-string'));
 const expect = chai.expect;
 const sinon = require('sinon');
 
-const mochaPlugin = require("../../../src/plugins/mocha/mocha-plugin");
+const mochaPlugin = require("../../../src/plugin/mocha/mocha-plugin");
 
 describe("mochaPlugin", () => {
     let hooks;
