@@ -3,11 +3,11 @@ const fs = require('fs'),
     proxy = require('http-proxy-middleware'),
     bodyParser = require('body-parser'),
     babel = require('babel-core'),
-    TestServer = require("./test-server"),
+    Server = require("./server"),
     Bootstrap = require("./bootstrap");
     Runner = require("./runner");
 
-const testServer = new TestServer(express, proxy, bodyParser);
+const testServer = new Server(express, proxy, bodyParser);
 const runner = new Runner();
 const bootstrap = new Bootstrap(fs, babel, runner, testServer);
 

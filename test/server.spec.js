@@ -1,10 +1,10 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const stubObject = require("./test-utils").stubObject;
-const TestServer = require("../src/test-server");
+const Server = require("../src/server");
 
-describe("TestServer", ()=> {
-    let testServer, express, expressApp, proxy, bodyParser;
+describe("Server", ()=> {
+    let server, express, expressApp, proxy, bodyParser;
 
     beforeEach(() => {
         express = sinon.stub();
@@ -15,14 +15,14 @@ describe("TestServer", ()=> {
 
         proxy = sinon.stub();
         express.returns(expressApp);
-        testServer = new TestServer(express, proxy, bodyParser);
+        server = new Server(express, proxy, bodyParser);
     });
 
     describe("start()", () => {
 
         it("initializes the body parser", () => {
             bodyParser.json.returns("setup parsing");
-            testServer.start();
+            server.start();
 
             expect(expressApp.use.called).to.be.true;
             expect(expressApp.use.firstCall.args[0]).to.equal("setup parsing");
@@ -30,8 +30,8 @@ describe("TestServer", ()=> {
         });
 
         it("start the server on the specified port", () => {
-            testServer.port(9001);
-            testServer.start();
+            server.port(9001);
+            server.start();
 
             expect(expressApp.listen.called).to.be.true;
             expect(expressApp.listen.firstCall.args).to.deep.equal([9001]);
@@ -39,26 +39,26 @@ describe("TestServer", ()=> {
 
         it("sets up the test endpoint second", () => {
             express.static.withArgs("test.html").returns("static");
-            testServer.endpoint("/test/endpoint");
-            testServer.start();
+            server.endpoint("/test/endpoint");
+            server.start();
 
             expect(expressApp.use.called).to.be.true;
             expect(expressApp.use.thirdCall.args[0]).to.equal("/test/endpoint");
         });
 
         it("sets up the result endpoint first", () => {
-            testServer.endpoint("/test/endpoint");
-            testServer.start();
+            server.endpoint("/test/endpoint");
+            server.start();
 
             expect(expressApp.use.called).to.be.true;
             expect(expressApp.use.secondCall.args[0]).to.equal("/test/endpoint/result");
         });
 
         it("set up the target proxy second", () => {
-            testServer.target("http://www.google.com");
+            server.target("http://www.google.com");
             proxy.returns("proxy");
 
-            testServer.start();
+            server.start();
 
             expect(expressApp.use.called).to.be.true;
             expect(expressApp.use.calledWith("/", "proxy")).to.be.true;
@@ -70,14 +70,14 @@ describe("TestServer", ()=> {
     describe("shutdown()", () => {
 
         it("shuts down the server", () => {
-            let server = {
+            let expressServer = {
                 close: sinon.stub()
             };
-            expressApp.listen.returns(server);
-            testServer.start();
-            testServer.shutdown();
+            expressApp.listen.returns(expressServer);
+            server.start();
+            server.shutdown();
 
-            expect(server.close.called).to.be.true;
+            expect(expressServer.close.called).to.be.true;
         });
 
     });
@@ -86,7 +86,7 @@ describe("TestServer", ()=> {
     describe("the testing endpoint", () => {
 
         it("returns a page with the scripts included", () => {
-            testServer
+            server
                 .scripts(["console.log('foo');", "console.log('bar');"])
                 .start();
 
@@ -119,7 +119,7 @@ describe("TestServer", ()=> {
         it("calls the result callback", () => {
             let callback = sinon.stub();
 
-            testServer.onResult(callback).start();
+            server.onResult(callback).start();
             let resultEndpointMethod = expressApp.use.secondCall.args[1];
             resultEndpointMethod(request, response);
 
@@ -127,7 +127,7 @@ describe("TestServer", ()=> {
          });
 
         it("sends an okay result", () => {
-            testServer.onResult(() => {}).start();
+            server.onResult(() => {}).start();
             let resultEndpointMethod = expressApp.use.secondCall.args[1];
             resultEndpointMethod(request, response);
 

@@ -4,7 +4,7 @@ const stubObject = require("./test-utils").stubObject;
 const Runner = require('../src/runner');
 
 describe("Runner", () => {
-    let runner, testServer, config;
+    let runner, server, config;
 
     beforeEach(() => {
         config =  {
@@ -13,9 +13,9 @@ describe("Runner", () => {
             port: "8000"
         };
         runner = new Runner();
-        testServer = stubObject(["start", "port", "endpoint", "onResult", "scripts", "target"], true);
+        server = stubObject(["start", "port", "endpoint", "onResult", "scripts", "target"], true);
         runner.config(config)
-            .server(testServer);
+            .server(server);
     });
 
     describe("run()", () => {
@@ -23,15 +23,15 @@ describe("Runner", () => {
         it("configures the test server", () => {
             runner.run();
 
-            expect(testServer.start.called).to.be.true;
-            expect(testServer.port.calledWith("8000")).to.be.true;
-            expect(testServer.endpoint.calledWith("/test-endpoint")).to.be.true;
-            expect(testServer.target.calledWith("http://www.test.com")).to.be.true;
+            expect(server.start.called).to.be.true;
+            expect(server.port.calledWith("8000")).to.be.true;
+            expect(server.endpoint.calledWith("/test-endpoint")).to.be.true;
+            expect(server.target.calledWith("http://www.test.com")).to.be.true;
         });
 
         it("runs the test server", () => {
             runner.run();
-            expect(testServer.start.called).to.be.true;
+            expect(server.start.called).to.be.true;
         });
 
     });
@@ -41,7 +41,7 @@ describe("Runner", () => {
         runner.reporters([reporter]);
 
         runner.run();
-        testServer.onResult.callArgWith(0, "result");
+        server.onResult.callArgWith(0, "result");
 
         expect(reporter.firstCall.args[0]).to.equal("result");
     });
