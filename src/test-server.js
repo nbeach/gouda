@@ -37,7 +37,7 @@ module.exports = function(express, proxy, bodyParser) {
             <html lang="en">
             <head>
                 <meta charset="UTF-8">
-                <title>JS E2E</title>
+                <title>Gouda</title>
                 <style>
                     html, body, iframe {
                         height: 100%;
