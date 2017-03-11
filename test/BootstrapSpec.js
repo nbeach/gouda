@@ -1,9 +1,9 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const stubObject = require("./testUtils").stubObject;
-const App = require('../src/App');
+const App = require('../src/Orchestrator');
 
-describe("App", () => {
+describe("Orchestrator", () => {
     let fs, testServer, babel, app;
 
     beforeEach(() => {
@@ -14,7 +14,6 @@ describe("App", () => {
         app = new App(fs, babel, testServer);
         app.workingDirectory("../test/");
     });
-
 
     describe("run()", () => {
 
@@ -83,6 +82,5 @@ describe("App", () => {
         });
 
     });
-
 
 });

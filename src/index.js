@@ -4,9 +4,9 @@ const fs = require('fs'),
     bodyParser = require('body-parser'),
     babel = require('babel-core'),
     TestServer = require("./TestServer"),
-    App = require("./App");
+    Bootstrap = require("./Bootstrap");
 
 const testServer = new TestServer(express, proxy, bodyParser);
-const app = new App(fs, babel, testServer);
+const bootstrap = new Bootstrap(fs, babel, testServer);
 
-app.workingDirectory(process.cwd()).run();
+bootstrap.workingDirectory(process.cwd()).run();
