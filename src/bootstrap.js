@@ -1,20 +1,16 @@
 const _ = require('lodash');
-module.exports = function(fs, babel, runner, testServer) {
-    let _workingDirectory = "";
+
+module.exports = function(fs, babel, runner, server, workingDirectory) {
     let _scripts = {
         before: [],
         after: []
     };
 
-    const BABEL_CONFIG = {
-        presets: ['es2015']
-    };
-
-    const _loadConfiguration = () => require(`${_workingDirectory}/app.config.js`);
-    const _transpile = (script) =>  babel.transform(script, BABEL_CONFIG).code;
+    const _loadConfiguration = () => require(`${workingDirectory}/app.config.js`);
+    const _transpile = (script) =>  babel.transform(script, { presets: ['es2015'] }).code;
 
     const _readContents = (file) => {
-        let path = file.startsWith("/") ? file : `${_workingDirectory}/${file}`;
+        let path = file.startsWith("/") ? file : `${workingDirectory}/${file}`;
         return fs.readFileSync(path);
     };
 
@@ -29,11 +25,6 @@ module.exports = function(fs, babel, runner, testServer) {
 
     const _initPlugins = (plugins) => {
         plugins.forEach(plugin => plugin(_hooks));
-        return this;
-    };
-
-    this.workingDirectory = (workingDirectory) => {
-        _workingDirectory = workingDirectory;
         return this;
     };
 
@@ -52,7 +43,7 @@ module.exports = function(fs, babel, runner, testServer) {
 
         runner
             .config(config)
-            .server(testServer)
+            .server(server)
             .tests(scripts)
             .run();
     };

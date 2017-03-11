@@ -12,8 +12,7 @@ describe("Bootstrap", () => {
         testServer = stubObject(["start", "port", "endpoint", "scripts", "target"], true);
         babel = stubObject(["transform"]);
 
-        app = new Bootstrap(fs, babel, runner, testServer);
-        app.workingDirectory("../test/");
+        app = new Bootstrap(fs, babel, runner, testServer, "../test/");
     });
 
     describe("run()", () => {

@@ -9,6 +9,6 @@ const fs = require('fs'),
 
 const testServer = new Server(express, proxy, bodyParser);
 const runner = new Runner();
-const bootstrap = new Bootstrap(fs, babel, runner, testServer);
+const bootstrap = new Bootstrap(fs, babel, runner, testServer, process.cwd());
 
-bootstrap.workingDirectory(process.cwd()).run();
+bootstrap.run();
