@@ -10,7 +10,7 @@ describe("Bootstrap", () => {
     beforeEach(() => {
         fs = stubObject(["readFileSync"]);
         server = stubObject(["start", "port", "endpoint", "scripts", "target"], true);
-        runner = stubObject(["server", "reporters", "run"], true);
+        runner = stubObject(["server", "reporters", "launchers", "run"], true);
         babel = stubObject(["transform"]);
 
         bootstrap = new Bootstrap(fs, babel, runner, server, "../test/");

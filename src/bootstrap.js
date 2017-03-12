@@ -55,7 +55,14 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
             .target(config.target)
             .scripts(scripts);
 
+        let ChromeLauncher = require('./launcher/chrome-launcher');
+        let chromeLauncher = new ChromeLauncher(`http://localhost:${config.port}${config.endpoint}`);
+
+        let FireFoxLauncher = require('./launcher/firefox-launcher');
+        let fireFoxLauncher = new FireFoxLauncher(`http://localhost:${config.port}${config.endpoint}`);
+
         runner
+            .launchers([fireFoxLauncher, chromeLauncher])
             .reporters([require('./reporter/simple-reporter')])
             .server(server)
             .run();

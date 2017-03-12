@@ -3,7 +3,6 @@ const fs = require('fs'),
     proxy = require('http-proxy-middleware'),
     bodyParser = require('body-parser'),
     babel = require('babel-core'),
-    ChildProcess = require('child_process'),
     Server = require("./server"),
     Bootstrap = require("./bootstrap"),
     Runner = require("./runner");

@@ -10,7 +10,8 @@ describe("ChromeLauncher", () => {
         chromeProcess = stubObject(["kill"]);
         childProcess.spawn.returns(chromeProcess);
 
-        chromeLauncher = new ChromeLauncher(childProcess, "http://localhost:8000/test");
+        chromeLauncher = new ChromeLauncher("http://localhost:8000/test");
+        chromeLauncher._childProcess = childProcess;
     });
 
     it("starts the browser", () => {

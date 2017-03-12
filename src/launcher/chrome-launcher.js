@@ -1,8 +1,11 @@
-module.exports = function(ChildProcess, url) {
+const childProcess = require('child_process');
+
+module.exports = function(url) {
+    this._childProcess = childProcess;
     let _process;
 
     this.start = () => {
-        _process = ChildProcess.spawn("google-chrome", [
+        _process = this._childProcess.spawn("google-chrome", [
             "--user-data-dir=/tmp/chrome-launcher",
             "--no-default-browser-check",
             "--no-first-run",

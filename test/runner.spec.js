@@ -20,6 +20,13 @@ describe("Runner", () => {
             expect(server.start.called).to.be.true;
         });
 
+        it("launches the browsers", () => {
+            let launcher = stubObject(["start", "stop"]);
+            runner.launchers([launcher]).run();
+
+            expect(launcher.start.called).to.be.true;
+        });
+
     });
 
     it("call the reporters on a result", () => {
@@ -67,6 +74,38 @@ describe("Runner", () => {
             expect(process.exit.firstCall.args[0]).to.equal(1);
         });
 
+        it("closes the browsers", () => {
+            let launcher = stubObject(["start", "stop"]);
+            runner.launchers([launcher]).run();
+
+            let resultCallback = server.onResult.firstCall.args[0];
+            resultCallback({ state: "failed" });
+            resultCallback({ state: "passed" });
+            expect(launcher.stop.called).to.be.false;
+            resultCallback({ state: "finished" });
+
+            expect(launcher.stop.called).to.be.true;
+        });
+
+    });
+
+    describe("doesn't end the run until all browsers have finished", () => {
+        it("closes the browsers", () => {
+            let launcher1 = stubObject(["start", "stop"]);
+            let launcher2 = stubObject(["start", "stop"]);
+            runner.launchers([launcher1, launcher2]).run();
+
+            let resultCallback = server.onResult.firstCall.args[0];
+            resultCallback({ state: "failed" });
+            resultCallback({ state: "passed" });
+            resultCallback({ state: "finished" });
+            expect(launcher1.stop.called).to.be.false;
+            expect(launcher2.stop.called).to.be.false;
+            resultCallback({ state: "finished" });
+
+            expect(launcher1.stop.called).to.be.true;
+            expect(launcher2.stop.called).to.be.true;
+        });
     });
 
 });

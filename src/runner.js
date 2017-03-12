@@ -5,6 +5,7 @@ module.exports = function(process) {
     let _launchers = [];
     let _server = null;
     let _failures = 0;
+    let _browsersFinished = 0;
 
     const _onResult = (result) => {
         _reporters.forEach(reporter => reporter(result));
@@ -12,8 +13,13 @@ module.exports = function(process) {
         if(result.state === 'failed') {
             _failures++;
         } else if(result.state === "finished") {
-            _server.shutdown();
-            process.exit(_failures > 0 ? 1 : 0);
+            _browsersFinished++;
+
+            if(_browsersFinished >= _launchers.length) {
+                _launchers.forEach(launcher => launcher.stop());
+                _server.shutdown();
+                process.exit(_failures > 0 ? 1 : 0);
+            }
         }
     };
 
@@ -36,6 +42,8 @@ module.exports = function(process) {
         _server
             .onResult(_onResult)
             .start();
+
+        _launchers.forEach(launcher => launcher.start());
     };
 
 };
