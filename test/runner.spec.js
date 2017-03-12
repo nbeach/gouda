@@ -38,7 +38,6 @@ describe("Runner", () => {
             runner.run();
             let resultCallback = server.onResult.firstCall.args[0];
             resultCallback({ state: "failed" });
-            expect(server.shutdown.called).to.be.false;
             resultCallback({ state: "passed" });
             expect(server.shutdown.called).to.be.false;
             resultCallback({ state: "finished" });
@@ -50,7 +49,6 @@ describe("Runner", () => {
             runner.run();
             let resultCallback = server.onResult.firstCall.args[0];
             resultCallback({ state: "passed" });
-            expect(process.exit.called).to.be.false;
             resultCallback({ state: "passed" });
             expect(process.exit.called).to.be.false;
             resultCallback({ state: "finished" });
@@ -62,7 +60,6 @@ describe("Runner", () => {
             runner.run();
             let resultCallback = server.onResult.firstCall.args[0];
             resultCallback({ state: "failed" });
-            expect(process.exit.called).to.be.false;
             resultCallback({ state: "passed" });
             expect(process.exit.called).to.be.false;
             resultCallback({ state: "finished" });
