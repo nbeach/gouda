@@ -33,6 +33,9 @@
     "http-proxy-middleware": "^0.17.3",
     "jquery": "^1.12.4",
     "lodash": "^4.17.4",
-    "simulant": "^0.2.2"
+    "phantomjs-prebuilt": "^2.1.14",
+    "rimraf": "^2.6.1",
+    "simulant": "^0.2.2",
+    "uuid": "^3.0.1"
   }
 }

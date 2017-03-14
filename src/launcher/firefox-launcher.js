@@ -1,16 +1,23 @@
 const childProcess = require('child_process');
+const AbstractLauncher = require('./abstract-launcher');
+const rimraf = require('rimraf');
+const uuid = require('uuid/v4');
 
-module.exports = function(url) {
-    this._childProcess = childProcess;
-    let _process;
+let launcher = function(url) {
 
-    this.start = () => {
-        _process = this._childProcess.spawn("firefox", [url]
-        );
+    this._binaryPaths = {
+        darwin: "/Applications/Firefox.app/Contents/MacOS/firefox",
+        linux: "firefox"
     };
 
-    this.stop = () => {
-        _process.kill();
-    };
+    this._options = [
+        url,
+        "-profile",
+        this._tempDir(),
+        "-no-remote"
+    ];
 
 };
+
+launcher.prototype = new AbstractLauncher(process, childProcess, rimraf, uuid);
+module.exports = launcher;

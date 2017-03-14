@@ -56,8 +56,8 @@ module.exports = function(express, proxy, bodyParser) {
     };
 
     const _result = (req, res) => {
-        _onResult(req.body);
         res.send('OK');
+        _onResult(req.body);
     };
 
     this.start = () => {
