@@ -1,27 +1,27 @@
-((window) => {
+(function(window) {
 
     window.testFrame = new (function() {
-        let _iframe = null;
+        var _iframe = null;
 
-        this.setup = (done) => {
+        this.setup = function(done) {
             _iframe = window.document.createElement('iframe');
             _iframe.src = "/";
-            _iframe.addEventListener("load", () => {
+            _iframe.addEventListener("load", function() {
                 done();
             });
 
             window.document.body.appendChild(_iframe);
         };
 
-        this.teardown = () => {
+        this.teardown = function() {
             _iframe.remove();
         };
 
-        this.window = () => {
+        this.window = function() {
             return _iframe.contentWindow;
         };
 
-        this.document = () => {
+        this.document = function() {
             return _iframe.contentWindow.document;
         };
 

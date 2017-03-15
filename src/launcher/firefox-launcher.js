@@ -3,21 +3,23 @@ const AbstractLauncher = require('./abstract-launcher');
 const rimraf = require('rimraf');
 const uuid = require('uuid/v4');
 
-let launcher = function(url) {
+module.exports = class FirefoxLauncher extends AbstractLauncher{
 
-    this._binaryPaths = {
-        darwin: "/Applications/Firefox.app/Contents/MacOS/firefox",
-        linux: "firefox"
-    };
+    constructor(url) {
+        super(process, childProcess, rimraf, uuid);
 
-    this._options = [
-        url,
-        "-profile",
-        this._tempDir(),
-        "-no-remote"
-    ];
+        this._binaryPaths = {
+            darwin: "/Applications/Firefox.app/Contents/MacOS/firefox",
+            linux: "firefox"
+        };
+
+        this._options = [
+            url,
+            "-profile",
+            this._tempDir(),
+            "-no-remote"
+        ];
+
+    }
 
 };
-
-launcher.prototype = new AbstractLauncher(process, childProcess, rimraf, uuid);
-module.exports = launcher;

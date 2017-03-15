@@ -1,22 +1,27 @@
-module.exports = function(process, childProcess, rimraf, uuid) {
-    this._childProcess = childProcess;
-    this._process = process;
-    this._rimraf = rimraf;
+module.exports = class AbstractLauncher {
 
-    let tempDir = `/tmp/${uuid()}`;
-    let _browserProcess;
+    constructor(process, childProcess, rimraf, uuid) {
+        this._childProcess = childProcess;
+        this._process = process;
+        this._rimraf = rimraf;
 
-    this._tempDir = function() {
-        return tempDir;
-    };
+        this._tempDirectory = `/tmp/${uuid()}`;
+        this._browserProcess = null;
+    }
 
-    this.start = function() {
+    _tempDir() {
+        return this._tempDirectory;
+    }
+
+    start() {
         let bin = this._binaryPaths[this._process.platform];
-        _browserProcess = this._childProcess.spawn(bin, this._options);
-    };
+        this._browserProcess = this._childProcess.spawn(bin, this._options);
+    }
 
-    this.stop = function() {
-        _browserProcess.kill('SIGKILL');
+    stop() {
+        this._browserProcess.kill('SIGKILL');
         this._rimraf.sync(this._tempDir())
-    };
+    }
+
 };
+
