@@ -1,21 +1,9 @@
 const _ = require('lodash');
+const path = require('path');
 
-module.exports = function(fs, babel, runner, server, workingDirectory) {
-    let _scripts = {
-        before: [],
-        after: []
-    };
-
-    let _reporters = [];
-
-    const _loadConfiguration = () => require(`${workingDirectory}/app.config.js`);
-    const _transpile = (script) =>  babel.transform(script, { presets: ['es2015'] }).code;
-
-    const _readContents = (file) => {
-        let path = file.startsWith("/") ? file : `${workingDirectory}/${file}`;
-        return fs.readFileSync(path);
-    };
-
+module.exports = function(fs, babel, runner, server, browserLauncher, config, workingDirectory) {
+    const _scripts = { before: [], after: [] };
+    // const _reporters = [];
     const _hooks = {
         beforeSpecs: {
             include: (file) => _scripts.before.push(_readContents(file))
@@ -23,17 +11,24 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
         afterSpecs: {
             include: (file) => _scripts.after.push(_readContents(file))
         },
-        reporter: (reporter) => {
-           _reporters.push(reporter);
+        // reporter: (reporter) => _reporters.push(reporter),
+        // launcher: (name, constructor) => browserLauncher[name] = constructor
+    };
+    const _initPlugins = () => config.plugins.forEach(plugin => plugin(_hooks));
+
+    const _transpile = (script) =>  babel.transform(script, { presets: ['es2015'] }).code;
+    const _readContents = (file) => fs.readFileSync(file.startsWith("/") ? file : path.join(workingDirectory, file));
+
+    const _getBrowserLaunchers = () => {
+        let constructors = [browserLauncher.phantomjs];
+        if(config.browsers && config.browsers.length > 0) {
+            constructors = config.browsers.map(name => browserLauncher[name]);
         }
+
+        return constructors.map(constructor => new constructor(`http://localhost:${config.port}${config.endpoint}`));
     };
 
-    const _initPlugins = (plugins) => {
-        plugins.forEach(plugin => plugin(_hooks));
-        return this;
-    };
-
-    const _loadScripts = (config) => {
+    const _loadScripts = () => {
         let specs = _.chain(config.specs)
             .map(file => _readContents(file))
             .map(script => _transpile(script))
@@ -45,9 +40,9 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
     };
 
     this.run = () => {
-        let config = _loadConfiguration();
-        _initPlugins(config.plugins);
-        let scripts = _loadScripts(config);
+        _initPlugins();
+        let scripts = _loadScripts();
+        let browserLaunchers = _getBrowserLaunchers();
 
         server
             .port(config.port)
@@ -55,15 +50,8 @@ module.exports = function(fs, babel, runner, server, workingDirectory) {
             .target(config.target)
             .scripts(scripts);
 
-        let launchers = [
-            require('./launcher/chrome-launcher'),
-            require('./launcher/firefox-launcher'),
-            require('./launcher/safari-launcher'),
-            require('./launcher/phantomjs/phantomjs-launcher')
-        ].map(constructor => new constructor(`http://localhost:${config.port}${config.endpoint}`));
-
         runner
-            .launchers(launchers)
+            .launchers(browserLaunchers)
             .reporters([require('./reporter/simple-reporter')])
             .server(server)
             .run();

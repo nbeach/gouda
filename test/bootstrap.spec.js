@@ -5,7 +5,7 @@ const stubObject = require("./test-utils").stubObject;
 const Bootstrap = require('../src/bootstrap');
 
 describe("Bootstrap", () => {
-    let fs, server, runner, babel, bootstrap;
+    let fs, config, server, runner, babel, bootstrap, browserLaunchers;
 
     beforeEach(() => {
         fs = stubObject(["readFileSync"]);
@@ -13,7 +13,29 @@ describe("Bootstrap", () => {
         runner = stubObject(["server", "reporters", "launchers", "run"], true);
         babel = stubObject(["transform"]);
 
-        bootstrap = new Bootstrap(fs, babel, runner, server, "../test/");
+        config = {
+            target: "http://www.test.com",
+            endpoint: "/test-endpoint",
+            port: "8000",
+            plugins: [
+                hooks => hooks.beforeSpecs.include("/before/file.js"),
+                hooks => hooks.afterSpecs.include("/after/file.js")
+            ],
+            specs: ["fooSpec.js", "barSpec.js"]
+        };
+
+        browserLaunchers =  {
+            'phantomjs': function(url) {
+                this.configuredName = 'phantomjs-instance';
+                this.configuredUrl = url;
+            },
+            'some-browser': function(url) {
+                this.configuredName = 'some-browser-instance';
+                this.configuredUrl = url;
+            }
+        };
+
+        bootstrap = new Bootstrap(fs, babel, runner, server, browserLaunchers, config, "../test/");
     });
 
     describe("run()", () => {
@@ -21,6 +43,28 @@ describe("Bootstrap", () => {
         beforeEach(() => {
             babel.transform.returns({ code: ""});
         });
+
+
+        describe("add browser launchers to the runner and ", () => {
+
+            it("uses the browser set in the config", () => {
+                config.browsers = ['some-browser'];
+
+                bootstrap.run();
+                let launcher = runner.launchers.firstCall.args[0][0];
+                expect(launcher.configuredName).to.deep.equal('some-browser-instance');
+                expect(launcher.configuredUrl).to.deep.equal('http://localhost:8000/test-endpoint');
+            });
+
+            it("defaults to phantomjs if no browsers are configured", () => {
+                bootstrap.run();
+                let launcher = runner.launchers.firstCall.args[0][0];
+                expect(launcher.configuredName).to.deep.equal('phantomjs-instance');
+                expect(launcher.configuredUrl).to.deep.equal('http://localhost:8000/test-endpoint');
+            });
+
+        });
+
 
         it("configures the server", () => {
             bootstrap.run();
